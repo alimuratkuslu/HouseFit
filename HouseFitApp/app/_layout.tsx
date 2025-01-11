@@ -24,7 +24,7 @@ export default function RootLayout() {
       if (!user && !inAuthGroup) {
         router.replace('/(auth)/login');
       } else if (user && inAuthGroup) {
-        router.replace('/(tabs)/home');
+        router.replace('/(tabs)');
       }
     }
   }, [fontsLoaded, isLoading]);

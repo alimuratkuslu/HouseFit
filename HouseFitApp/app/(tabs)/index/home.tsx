@@ -1,8 +1,9 @@
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScreenLayout } from '@/src/components/ScreenLayout';
 import { useAuth } from '@/src/hooks/useAuth';
 import { MaterialIcons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 export default function HomeScreen() {
   const { user } = useAuth();
@@ -20,6 +21,12 @@ export default function HomeScreen() {
             <MaterialIcons name="fitness-center" size={24} color="#000" />
             <Text style={styles.cardTitle}>Ready for your next session?</Text>
             <Text style={styles.cardText}>Book a training session with our expert trainers</Text>
+            <TouchableOpacity 
+              style={styles.actionButton}
+              onPress={() => router.push('/(tabs)/appointments/new')}
+            >
+              <Text style={styles.actionButtonText}>Book Session</Text>
+            </TouchableOpacity>
           </View>
         ) : (
           <>
@@ -27,14 +34,29 @@ export default function HomeScreen() {
               <MaterialIcons name="schedule" size={24} color="#000" />
               <Text style={styles.cardTitle}>Training Requests</Text>
               <Text style={styles.cardText}>View and manage your upcoming sessions</Text>
+              <TouchableOpacity 
+                style={styles.actionButton}
+                onPress={() => router.push('/(tabs)/appointments')}
+              >
+                <Text style={styles.actionButtonText}>View Sessions</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity 
-              style={styles.setAvailabilityButton}
-              onPress={() => router.push('/(tabs)/set-availability')}
-            >
-              <MaterialIcons name="access-time" size={24} color="#fff" />
-              <Text style={styles.buttonText}>Set Your Availability</Text>
-            </TouchableOpacity>
+
+            <View style={styles.trainerActions}>
+              <Link href="/(tabs)/index/set-availability" asChild>
+                <TouchableOpacity style={[styles.trainerButton, styles.availabilityButton]}>
+                  <MaterialIcons name="access-time" size={24} color="#fff" />
+                  <Text style={styles.trainerButtonText}>Set Availability</Text>
+                </TouchableOpacity>
+              </Link>
+
+              <Link href="/(tabs)/index/points" asChild>
+                <TouchableOpacity style={[styles.trainerButton, styles.pointsButton]}>
+                  <MaterialIcons name="emoji-events" size={24} color="#fff" />
+                  <Text style={styles.trainerButtonText}>Manage Points</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
           </>
         )}
       </View>
@@ -88,20 +110,43 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     lineHeight: 24,
+    marginBottom: 20,
   },
-  setAvailabilityButton: {
+  actionButton: {
     backgroundColor: '#000',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 15,
-    borderRadius: 12,
-    marginTop: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
   },
-  buttonText: {
+  actionButtonText: {
     color: '#fff',
     fontFamily: 'Poppins-Bold',
     fontSize: 16,
-    marginLeft: 10,
+  },
+  trainerActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  trainerButton: {
+    flex: 0.48,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    borderRadius: 12,
+  },
+  availabilityButton: {
+    backgroundColor: '#000',
+  },
+  pointsButton: {
+    backgroundColor: '#4CAF50',
+  },
+  trainerButtonText: {
+    color: '#fff',
+    fontFamily: 'Poppins-Bold',
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
   },
 }); 

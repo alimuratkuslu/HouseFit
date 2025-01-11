@@ -41,7 +41,7 @@ export default function LoginScreen() {
           const userDetails = await authService.getUserDetails(username);
           await AsyncStorage.setItem('user', JSON.stringify(userDetails));
 
-          router.replace('/(tabs)');
+          router.replace('/(tabs)/index/home');
         } catch (userError: any) {
           await AsyncStorage.removeItem('token');
           Alert.alert('Error', 'Failed to fetch user details');

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Tabs } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '@/src/hooks/useAuth';
@@ -7,12 +8,10 @@ export default function TabLayout() {
 
   if (!user) return null;
 
-  const isTrainer = user.userType === 'TRAINER';
-
   return (
     <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => (
@@ -38,34 +37,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="index"
-        options={{
-          href: null,
-        }}
-      />
-      {isTrainer && (
-        <>
-          <Tabs.Screen
-            name="points"
-            options={{
-              title: 'Reward Points',
-              tabBarIcon: ({ color }) => (
-                <MaterialIcons name="star" size={24} color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name="set-availability"
-            options={{
-              title: 'Set Availability',
-              tabBarIcon: ({ color }) => (
-                <MaterialIcons name="schedule" size={24} color={color} />
-              ),
-            }}
-          />
-        </>
-      )}
     </Tabs>
   );
 }

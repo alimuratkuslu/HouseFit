@@ -9,7 +9,7 @@ export default function TrainerDashboard() {
       
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => router.push('/home/set-availability')}
+        onPress={() => router.push('/(tabs)/index/set-availability')}
       >
         <Text style={styles.buttonText}>Set New Availability</Text>
       </TouchableOpacity>

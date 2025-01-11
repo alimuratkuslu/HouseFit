@@ -59,7 +59,7 @@ export default function RegisterScreen() {
             [
               {
                 text: 'OK',
-                onPress: () => router.replace('/(tabs)/dashboard')
+                onPress: () => router.replace('/(tabs)/index/home')
               }
             ]
           );
