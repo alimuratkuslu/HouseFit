@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  backend:
+    build: .
+    container_name: backend-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/housefit
+      - SPRING_DATASOURCE_USERNAME=youruser
+      - SPRING_DATASOURCE_PASSWORD=yourpassword
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: housefit
+    ports:
+      - "5432:5432"
