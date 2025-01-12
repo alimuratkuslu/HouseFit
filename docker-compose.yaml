@@ -9,8 +9,8 @@ services:
       - postgres
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/housefit
-      - SPRING_DATASOURCE_USERNAME=youruser
-      - SPRING_DATASOURCE_PASSWORD=yourpassword
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
 
   postgres:
     image: postgres:15
