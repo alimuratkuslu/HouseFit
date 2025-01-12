@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
-import { useAuth } from '@/src/hooks/useAuth';
+import { useAuth, AuthProvider } from '@/src/hooks/useAuth';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const { isLoading, user } = useAuth();
+function RootLayoutNav() {
+  const { loading, user } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
@@ -17,21 +17,29 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded && !isLoading) {
+    if (fontsLoaded && !loading) {
       SplashScreen.hideAsync();
       const inAuthGroup = segments[0] === '(auth)';
       
       if (!user && !inAuthGroup) {
         router.replace('/(auth)/login');
       } else if (user && inAuthGroup) {
-        router.replace('/(tabs)');
+        router.replace('/(tabs)' as any);
       }
     }
-  }, [fontsLoaded, isLoading]);
+  }, [fontsLoaded, loading]);
 
-  if (!fontsLoaded || isLoading) {
+  if (!fontsLoaded || loading) {
     return null;
   }
 
   return <Slot />;
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
+  );
 }

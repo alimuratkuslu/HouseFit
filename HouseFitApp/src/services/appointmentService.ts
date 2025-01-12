@@ -53,7 +53,6 @@ export const appointmentService = {
 
   async requestAppointment(trainerId: number, date: string, message: string): Promise<Appointment> {
     try {
-      // Format the date to match exactly what the backend expects
       const appointmentDate = new Date(date);
       const formattedDate = `${appointmentDate.getFullYear()}-${
         String(appointmentDate.getMonth() + 1).padStart(2, '0')}-${
@@ -78,7 +77,6 @@ export const appointmentService = {
       const user = await AsyncStorage.getItem('user');
       const userObj = user ? JSON.parse(user) : null;
       
-      // Use different endpoints based on user type
       const endpoint = userObj?.userType === 'TRAINER' 
         ? '/api/appointment/trainer-appointments'
         : '/api/appointment/my-appointments';

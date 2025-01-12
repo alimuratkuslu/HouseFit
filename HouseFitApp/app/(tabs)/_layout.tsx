@@ -13,6 +13,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="home"
+        options={{
           title: 'Home',
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="home" size={24} color={color} />
@@ -25,6 +31,15 @@ export default function TabLayout() {
           title: 'My Sessions',
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="event" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: 'Messages',
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="chat" size={24} color={color} />
           ),
         }}
       />

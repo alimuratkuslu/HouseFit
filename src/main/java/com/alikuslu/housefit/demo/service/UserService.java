@@ -21,7 +21,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> findAllTrainers() {
+    public List<User> getAllTrainers() {
         return userRepository.findByUserType(UserType.TRAINER);
     }
 

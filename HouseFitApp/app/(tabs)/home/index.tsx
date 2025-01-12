@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { ScreenLayout } from '@/src/components/ScreenLayout';
 import { useAuth } from '@/src/hooks/useAuth';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
 function getOccupancyColor(rate: number): string {
-  if (rate < 40) return '#4CAF50';  // Green for low occupancy
-  if (rate < 70) return '#FFA000';  // Orange for medium occupancy
-  return '#F44336';  // Red for high occupancy
+  if (rate < 40) return '#4CAF50';
+  if (rate < 70) return '#FFA000';
+  return '#F44336';
 }
 
 function getOccupancyText(rate: number): string {
@@ -25,85 +25,93 @@ export default function HomeScreen() {
 
   return (
     <ScreenLayout>
-      <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeText}>Welcome back,</Text>
-        <Text style={styles.nameText}>{user?.name}</Text>
-      </View>
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <View style={styles.welcomeContainer}>
+          <Text style={styles.welcomeText}>Welcome back,</Text>
+          <Text style={styles.nameText}>{user?.name}</Text>
+        </View>
 
-      <View style={styles.occupancyContainer}>
-        <Text style={styles.occupancyTitle}>Current Gym Occupancy</Text>
-        <View style={styles.occupancyContent}>
-          <View style={styles.occupancyRateContainer}>
-            <View style={[styles.occupancyCircle, { borderColor: occupancyColor }]}>
-              <Text style={[styles.occupancyRate, { color: occupancyColor }]}>{occupancyRate}%</Text>
+        <View style={styles.occupancyContainer}>
+          <Text style={styles.occupancyTitle}>Current Gym Occupancy</Text>
+          <View style={styles.occupancyContent}>
+            <View style={styles.occupancyRateContainer}>
+              <View style={[styles.occupancyCircle, { borderColor: occupancyColor }]}>
+                <Text style={[styles.occupancyRate, { color: occupancyColor }]}>{occupancyRate}%</Text>
+              </View>
+              <Text style={[styles.occupancyStatus, { color: occupancyColor }]}>{occupancyText}</Text>
             </View>
-            <Text style={[styles.occupancyStatus, { color: occupancyColor }]}>{occupancyText}</Text>
-          </View>
-          <View style={styles.occupancyInfo}>
-            <View style={styles.infoItem}>
-              <MaterialIcons name="people" size={24} color={occupancyColor} />
-              <Text style={styles.infoText}>Current Status</Text>
-            </View>
-            <View style={styles.infoItem}>
-              <MaterialIcons name="update" size={24} color="#666" />
-              <Text style={styles.infoText}>Updated just now</Text>
+            <View style={styles.occupancyInfo}>
+              <View style={styles.infoItem}>
+                <MaterialIcons name="people" size={24} color={occupancyColor} />
+                <Text style={styles.infoText}>Current Status</Text>
+              </View>
+              <View style={styles.infoItem}>
+                <MaterialIcons name="update" size={24} color="#666" />
+                <Text style={styles.infoText}>Updated just now</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.content}>
-        {user?.userType === 'CUSTOMER' ? (
-          <View style={styles.card}>
-            <MaterialIcons name="fitness-center" size={24} color="#000" />
-            <Text style={styles.cardTitle}>Ready for your next session?</Text>
-            <Text style={styles.cardText}>Book a training session with our expert trainers</Text>
-            <TouchableOpacity 
-              style={styles.actionButton}
-              onPress={() => router.push('/(tabs)/appointments/new')}
-            >
-              <Text style={styles.actionButtonText}>Book Session</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <>
+        <View style={styles.content}>
+          {user?.userType === 'CUSTOMER' ? (
             <View style={styles.card}>
-              <MaterialIcons name="schedule" size={24} color="#000" />
-              <Text style={styles.cardTitle}>Training Requests</Text>
-              <Text style={styles.cardText}>View and manage your upcoming sessions</Text>
+              <MaterialIcons name="fitness-center" size={24} color="#000" />
+              <Text style={styles.cardTitle}>Ready for your next session?</Text>
+              <Text style={styles.cardText}>Book a training session with our expert trainers</Text>
               <TouchableOpacity 
                 style={styles.actionButton}
-                onPress={() => router.push('/(tabs)/appointments')}
+                onPress={() => router.push('/(tabs)/appointments/new')}
               >
-                <Text style={styles.actionButtonText}>View Sessions</Text>
+                <Text style={styles.actionButtonText}>Book Session</Text>
               </TouchableOpacity>
             </View>
+          ) : (
+            <>
+              <View style={styles.card}>
+                <MaterialIcons name="schedule" size={24} color="#000" />
+                <Text style={styles.cardTitle}>Training Requests</Text>
+                <Text style={styles.cardText}>View and manage your upcoming sessions</Text>
+                <TouchableOpacity 
+                  style={styles.actionButton}
+                  onPress={() => router.push('/(tabs)/appointments')}
+                >
+                  <Text style={styles.actionButtonText}>View Sessions</Text>
+                </TouchableOpacity>
+              </View>
 
-            <View style={styles.trainerActions}>
-              <TouchableOpacity 
-                style={[styles.trainerButton, styles.availabilityButton]}
-                onPress={() => router.push('./set-availability')}
-              >
-                <MaterialIcons name="access-time" size={24} color="#fff" />
-                <Text style={styles.trainerButtonText}>Set Availability</Text>
-              </TouchableOpacity>
+              <View style={styles.trainerActions}>
+                <TouchableOpacity 
+                  style={[styles.trainerButton, styles.availabilityButton]}
+                  onPress={() => router.push('/home/set-availability')}
+                >
+                  <MaterialIcons name="access-time" size={24} color="#fff" />
+                  <Text style={styles.trainerButtonText}>Set Availability</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.trainerButton, styles.pointsButton]}
-                onPress={() => router.push('./points')}
-              >
-                <MaterialIcons name="emoji-events" size={24} color="#fff" />
-                <Text style={styles.trainerButtonText}>Manage Points</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-      </View>
+                <TouchableOpacity 
+                  style={[styles.trainerButton, styles.pointsButton]}
+                  onPress={() => router.push('/home/points')}
+                >
+                  <MaterialIcons name="emoji-events" size={24} color="#fff" />
+                  <Text style={styles.trainerButtonText}>Manage Points</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
+        </View>
+      </ScrollView>
     </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    paddingBottom: 20,
+  },
   welcomeContainer: {
     marginTop: 20,
     marginBottom: 30,

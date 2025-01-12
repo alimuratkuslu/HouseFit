@@ -19,7 +19,7 @@ public class UserController {
 
     @GetMapping("/trainers")
     public ResponseEntity<List<User>> getAllTrainers() {
-        return ResponseEntity.ok(userService.findAllTrainers());
+        return ResponseEntity.ok(userService.getAllTrainers());
     }
 
     @GetMapping("/{username}")
