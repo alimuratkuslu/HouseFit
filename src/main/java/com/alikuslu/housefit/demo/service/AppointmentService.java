@@ -55,7 +55,7 @@ public class AppointmentService {
         String username = getLoggedInUsername();
         User customer = userService.findByUsername(username);
 
-        return appointmentRepository.findByCustomerId(customer.getId());
+        return appointmentRepository.findByCustomerIdOrderByAppointmentTimeDesc(customer.getId());
     }
 
     public List<Appointment> getAllAppointments() {

@@ -27,6 +27,7 @@ public class User implements UserDetails {
     private String username;
     private String name;
     private String surname;
+    private String email;
     private LocalDate dateOfBirth;
     private String password;
 
@@ -35,6 +36,15 @@ public class User implements UserDetails {
 
     private Double points = 0.0;
     private String avatar;
+
+    private Double weight;
+    private Double height;
+    private Double bodyFat;
+    private Double muscleMass;
+
+    private Boolean emailNotifications = true;
+    private Boolean pushNotifications = true;
+    private String reminderTime;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

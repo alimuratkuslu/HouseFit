@@ -1,5 +1,8 @@
 package com.alikuslu.housefit.demo.controller;
 
+import com.alikuslu.housefit.demo.dto.NotificationSettingsDto;
+import com.alikuslu.housefit.demo.dto.UpdateMeasurementDto;
+import com.alikuslu.housefit.demo.dto.UpdateProfileDto;
 import com.alikuslu.housefit.demo.model.User;
 import com.alikuslu.housefit.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,24 @@ public class UserController {
     @GetMapping("/trainers")
     public ResponseEntity<List<User>> getAllTrainers() {
         return ResponseEntity.ok(userService.getAllTrainers());
+    }
+
+    @PutMapping("/{id}/profile")
+    public ResponseEntity<User> updateProfile(@PathVariable Long id, @RequestBody UpdateProfileDto profileDto) {
+        User updatedUser = userService.updateProfile(id, profileDto);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PutMapping("/{id}/measurements")
+    public ResponseEntity<User> updateMeasurements(@PathVariable Long id, @RequestBody UpdateMeasurementDto measurementsDto) {
+        User updatedUser = userService.updateMeasurements(id, measurementsDto);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PutMapping("/{id}/notifications")
+    public ResponseEntity<User> updateNotificationSettings(@PathVariable Long id,  @RequestBody NotificationSettingsDto settingsDto) {
+        User updatedUser = userService.updateNotificationSettings(id, settingsDto);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @GetMapping("/{username}")

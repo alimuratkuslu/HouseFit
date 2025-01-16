@@ -1,5 +1,8 @@
 package com.alikuslu.housefit.demo.service;
 
+import com.alikuslu.housefit.demo.dto.NotificationSettingsDto;
+import com.alikuslu.housefit.demo.dto.UpdateMeasurementDto;
+import com.alikuslu.housefit.demo.dto.UpdateProfileDto;
 import com.alikuslu.housefit.demo.model.User;
 import com.alikuslu.housefit.demo.model.UserType;
 import com.alikuslu.housefit.demo.repository.UserRepository;
@@ -23,6 +26,40 @@ public class UserService {
 
     public List<User> getAllTrainers() {
         return userRepository.findByUserType(UserType.TRAINER);
+    }
+
+    public User updateProfile(Long id, UpdateProfileDto profileDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setName(profileDto.getName());
+        user.setSurname(profileDto.getSurname());
+        user.setDateOfBirth(profileDto.getDateOfBirth());
+
+        return userRepository.save(user);
+    }
+
+    public User updateMeasurements(Long id, UpdateMeasurementDto measurementsDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setWeight(measurementsDto.getWeight());
+        user.setHeight(measurementsDto.getHeight());
+        user.setBodyFat(measurementsDto.getBodyFat());
+        user.setMuscleMass(measurementsDto.getMuscleMass());
+
+        return userRepository.save(user);
+    }
+
+    public User updateNotificationSettings(Long id, NotificationSettingsDto settingsDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setEmailNotifications(settingsDto.getEmailNotifications());
+        user.setPushNotifications(settingsDto.getPushNotifications());
+        user.setReminderTime(settingsDto.getReminderTime());
+
+        return userRepository.save(user);
     }
 
     public User findByUsername(String username) {
