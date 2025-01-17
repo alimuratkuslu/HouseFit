@@ -4,6 +4,7 @@ import com.alikuslu.housefit.demo.dto.NotificationSettingsDto;
 import com.alikuslu.housefit.demo.dto.UpdateMeasurementDto;
 import com.alikuslu.housefit.demo.dto.UpdateProfileDto;
 import com.alikuslu.housefit.demo.model.User;
+import com.alikuslu.housefit.demo.model.UserType;
 import com.alikuslu.housefit.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,13 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+    
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "CUSTOMER") UserType type) {
+        return ResponseEntity.ok(userService.searchUsers(query, type));
     }
 
     @GetMapping("/trainers")

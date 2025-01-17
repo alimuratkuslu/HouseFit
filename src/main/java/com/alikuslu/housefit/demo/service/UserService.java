@@ -24,6 +24,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public List<User> searchUsers(String query, UserType type) {
+        return userRepository.findByUsernameContainingIgnoreCaseAndUserType(query, type);
+    }
+
     public List<User> getAllTrainers() {
         return userRepository.findByUserType(UserType.TRAINER);
     }
