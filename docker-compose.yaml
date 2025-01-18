@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    build: .
+    image: alimuratkuslu/housefit:latest
     container_name: backend-service
     ports:
       - "9080:9080"
