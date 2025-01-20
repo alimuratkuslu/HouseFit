@@ -52,6 +52,11 @@ public class TipService {
         return tipRepository.findByCategory(category);
     }
 
+    public Tip getRandomTip() {
+        return tipRepository.findRandomTip()
+                .orElseThrow(() -> new RuntimeException("No tips available"));
+    }
+
     private String getLoggedInUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {

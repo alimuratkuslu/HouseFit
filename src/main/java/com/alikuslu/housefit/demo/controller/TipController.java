@@ -36,4 +36,9 @@ public class TipController {
             @PathVariable TipCategory category) {
         return ResponseEntity.ok(tipService.getTipsByCategory(category));
     }
+
+    @GetMapping("/random")
+    public ResponseEntity<Tip> getRandomTip() {
+        return ResponseEntity.ok(tipService.getRandomTip());
+    }
 }
