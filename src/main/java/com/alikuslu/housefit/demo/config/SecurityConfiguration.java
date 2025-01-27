@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         /*
                        .antMatchers("/api/admin/**").hasRole("ADMIN")
                        .antMatchers("/api/trainer/**").hasRole("TRAINER")
