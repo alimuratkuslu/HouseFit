@@ -19,14 +19,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
         if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
         User user = optionalUser.get();
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
+                .username(user.getPhoneNumber())
                 .password(user.getPassword())
                 .roles(user.getUserType().name())
                 .build();

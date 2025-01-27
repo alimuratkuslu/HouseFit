@@ -28,12 +28,15 @@ public class User implements UserDetails {
     private String name;
     private String surname;
     private String email;
+    private String phoneNumber;
     private LocalDate dateOfBirth;
     private String password;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    private String referralCode;
+    private String referredBy;
     private Double points = 0.0;
     private String avatar;
 

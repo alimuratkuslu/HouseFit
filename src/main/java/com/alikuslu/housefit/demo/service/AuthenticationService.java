@@ -1,5 +1,6 @@
 package com.alikuslu.housefit.demo.service;
 
+import com.alikuslu.housefit.demo.dto.LoginUserDto;
 import com.alikuslu.housefit.demo.dto.RegisterUserDto;
 import com.alikuslu.housefit.demo.exception.AuthenticationException;
 import com.alikuslu.housefit.demo.model.User;
@@ -10,7 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthenticationService {
@@ -26,16 +27,31 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input) {
-        if (userRepository.findByUsername(input.getUsername()).isPresent()) {
-            throw new AuthenticationException(String.format("User with username %s already exists!", input.getUsername()), "username");
+        if (userRepository.findByPhoneNumber(input.getPhoneNumber()).isPresent()) {
+            throw new AuthenticationException(String.format("User with username %s already exists!", input.getPhoneNumber()), "username");
         }
 
+        String referralCode = generateReferralCode();
+
         User user = User.builder()
-                .username(input.getUsername())
+                .name(input.getName())
+                .surname(input.getSurname())
+                .phoneNumber(input.getPhoneNumber())
                 .password(passwordEncoder.encode(input.getPassword()))
+                .referralCode(referralCode)
                 .userType(UserType.CUSTOMER)
                 .points(0.0)
                 .build();
+
+        if (input.getReferralCode() != null && !input.getReferralCode().isEmpty()) {
+            User referrer = userRepository.findByReferralCode(input.getReferralCode());
+            if (referrer != null) {
+                referrer.setPoints(referrer.getPoints() + 10);
+                user.setPoints(user.getPoints() + 5);
+                user.setReferredBy(referrer.getReferralCode());
+                userRepository.save(referrer);
+            }
+        }
 
         return userRepository.save(user);
     }
@@ -47,7 +63,7 @@ public class AuthenticationService {
     }
     */
 
-    public User authenticate(RegisterUserDto input) {
+    public User authenticate(LoginUserDto input) {
         User user = userRepository.findByUsername(input.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -59,5 +75,23 @@ public class AuthenticationService {
         );
 
         return user;
+    }
+
+    public User authenticateByPhone(LoginUserDto input) {
+        User user = userRepository.findByPhoneNumber(input.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getPhoneNumber(),
+                        input.getPassword()
+                )
+        );
+
+        return user;
+    }
+
+    private String generateReferralCode() {
+        return UUID.randomUUID().toString().substring(0, 8);
     }
 }

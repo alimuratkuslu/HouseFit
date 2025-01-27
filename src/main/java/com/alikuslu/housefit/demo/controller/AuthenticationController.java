@@ -1,6 +1,7 @@
 package com.alikuslu.housefit.demo.controller;
 
 import com.alikuslu.housefit.demo.dto.LoginResponse;
+import com.alikuslu.housefit.demo.dto.LoginUserDto;
 import com.alikuslu.housefit.demo.dto.RegisterUserDto;
 import com.alikuslu.housefit.demo.model.User;
 import com.alikuslu.housefit.demo.service.AuthenticationService;
@@ -24,14 +25,20 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody RegisterUserDto loginUserDto){
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto){
+        User authenticatedUser;
+
+        if (loginUserDto.getUsername().matches("\\d{10}")) {
+            authenticatedUser = authenticationService.authenticateByPhone(loginUserDto);
+        } else {
+            authenticatedUser = authenticationService.authenticate(loginUserDto);
+        }
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
         return ResponseEntity.ok(loginResponse);

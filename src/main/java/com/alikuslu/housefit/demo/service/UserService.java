@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public List<User> searchUsers(String query, UserType type) {
-        return userRepository.findByUsernameContainingIgnoreCaseAndUserType(query, type);
+        return userRepository.searchByNameOrSurnameAndType(query, type);
     }
 
     public List<User> getAllTrainers() {
@@ -68,6 +68,15 @@ public class UserService {
 
     public User findByUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return optionalUser.get();
+    }
+
+    public User findByPhoneNumber(String phoneNumber) {
+        Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
 
         if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
