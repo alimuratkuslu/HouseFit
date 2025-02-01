@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +40,9 @@ public class User implements UserDetails {
     private String referredBy;
     private Double points = 0.0;
     private String avatar;
+
+    private String passwordResetCode;
+    private LocalDateTime passwordResetCodeExpiresAt;
 
     private Double weight;
     private Double height;

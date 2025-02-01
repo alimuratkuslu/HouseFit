@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPhoneNumber(String phoneNumber);
     User findByReferralCode(String referralCode);
     List<User> findByUserType(UserType userType);
+    Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE " +
             "(LOWER(u.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +

@@ -34,6 +34,12 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/trainer-appointments/pending")
+    public ResponseEntity<List<Appointment>> getTrainerAppointmentsPending() {
+        List<Appointment> appointments = appointmentService.getTrainerPendingAppointments();
+        return ResponseEntity.ok(appointments);
+    }
+
     @PutMapping("/{appointmentId}/accept")
     public ResponseEntity<Appointment> acceptAppointment(@PathVariable Long appointmentId) {
         Appointment updatedAppointment = appointmentService.acceptAppointment(appointmentId);

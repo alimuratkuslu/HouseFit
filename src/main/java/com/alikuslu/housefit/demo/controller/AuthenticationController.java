@@ -1,8 +1,6 @@
 package com.alikuslu.housefit.demo.controller;
 
-import com.alikuslu.housefit.demo.dto.LoginResponse;
-import com.alikuslu.housefit.demo.dto.LoginUserDto;
-import com.alikuslu.housefit.demo.dto.RegisterUserDto;
+import com.alikuslu.housefit.demo.dto.*;
 import com.alikuslu.housefit.demo.model.User;
 import com.alikuslu.housefit.demo.service.AuthenticationService;
 import com.alikuslu.housefit.demo.service.JwtService;
@@ -22,6 +20,24 @@ public class AuthenticationController {
     public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+    }
+
+    @PostMapping("/initiate")
+    public ResponseEntity<Void> initiatePasswordReset(@RequestBody PasswordResetRequest request) {
+        authenticationService.initiatePasswordReset(request.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<Void> verifyResetCode(@RequestBody VerifyCodeRequest request) {
+        authenticationService.verifyResetCode(request.getEmail(), request.getCode());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<Void> resetPassword(@RequestBody NewPasswordRequest request) {
+        authenticationService.resetPassword(request.getEmail(), request.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/signup")

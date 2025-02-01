@@ -1,5 +1,6 @@
 package com.alikuslu.housefit.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,5 +20,11 @@ public class Meal {
     private LocalTime time;
 
     @ElementCollection
+    @CollectionTable(name = "meal_items", joinColumns = @JoinColumn(name = "meal_id"))
     private List<MealFood> items;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "diet_plan_id")
+    private DietPlan dietPlan;
 }

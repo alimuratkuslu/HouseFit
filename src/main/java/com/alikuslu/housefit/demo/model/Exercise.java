@@ -10,11 +10,10 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
-    private Integer sets;
-    private Integer repetitions;
-    private String notes;
-
-    @ManyToOne
-    private Workout workout;
+    private String muscleGroup;
+    private String equipment;
+    private String description;
+    private String videoUrl;
 }

@@ -51,6 +51,12 @@ public class AppointmentService {
         return appointmentRepository.findByTrainerOrderByAppointmentTimeDesc(trainer);
     }
 
+    public List<Appointment> getTrainerPendingAppointments() {
+        String trainerUsername = getLoggedInUsername();
+        User trainer = userService.findByUsername(trainerUsername);
+        return appointmentRepository.findByTrainerAndStatusOrderByAppointmentTimeDesc(trainer, AppointmentStatus.PENDING);
+    }
+
     public List<Appointment> getAppointmentsOfSessionUser() {
         String username = getLoggedInUsername();
         User customer = userService.findByUsername(username);

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -13,15 +13,19 @@ public class TrainingPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trainer_id", nullable = false)
     private User trainer;
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private String intensity;
+    private String goal;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainingPlan")
-    private List<Workout> workouts;
+    @OneToMany(mappedBy = "trainingPlan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Workout> workouts = new ArrayList<>();
 }

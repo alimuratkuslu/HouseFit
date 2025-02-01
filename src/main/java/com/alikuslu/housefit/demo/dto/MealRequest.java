@@ -7,8 +7,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Data
-public class MealDto {
+public class MealRequest {
     private MealType type;
     private LocalTime time;
-    private List<MealFoodDto> foods;
+    private List<MealFoodRequest> items;
 }

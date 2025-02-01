@@ -3,7 +3,7 @@ package com.alikuslu.housefit.demo.dto;
 import lombok.Data;
 
 @Data
-public class MealFoodDto {
+public class MealFoodRequest {
     private String foodId;
     private String label;
     private Double portion;

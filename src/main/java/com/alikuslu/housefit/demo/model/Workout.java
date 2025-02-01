@@ -3,7 +3,7 @@ package com.alikuslu.housefit.demo.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -13,11 +13,13 @@ public class Workout {
     private Long id;
 
     private String name;
-    private String dayOfWeek;
+    private int dayOfWeek;
+    private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "training_plan_id", nullable = false)
     private TrainingPlan trainingPlan;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workout")
-    private List<Exercise> exercises;
+    @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkoutExercise> workoutExercises = new ArrayList<>();
 }
