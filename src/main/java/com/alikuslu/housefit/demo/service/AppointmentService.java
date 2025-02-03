@@ -1,10 +1,7 @@
 package com.alikuslu.housefit.demo.service;
 
 import com.alikuslu.housefit.demo.dto.RequestAppointmentDto;
-import com.alikuslu.housefit.demo.model.Appointment;
-import com.alikuslu.housefit.demo.model.AppointmentStatus;
-import com.alikuslu.housefit.demo.model.Availability;
-import com.alikuslu.housefit.demo.model.User;
+import com.alikuslu.housefit.demo.model.*;
 import com.alikuslu.housefit.demo.repository.AppointmentRepository;
 import com.alikuslu.housefit.demo.repository.AvailabilityRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +47,21 @@ public class AppointmentService {
         String trainerUsername = getLoggedInUsername();
         User trainer = userService.findByUsername(trainerUsername);
         return appointmentRepository.findByTrainerOrderByAppointmentTimeDesc(trainer);
+    }
+
+    public List<Appointment> getTodaysSessions() {
+        String trainerUsername = getLoggedInUsername();
+        User user = userService.findByUsername(trainerUsername);
+
+        LocalDateTime startOfDay = LocalDateTime.now().with(LocalTime.MIN);
+        LocalDateTime endOfDay = LocalDateTime.now().with(LocalTime.MAX);
+
+        return appointmentRepository.findByTrainerAndAppointmentTimeBetweenAndStatus(
+                user,
+                startOfDay,
+                endOfDay,
+                AppointmentStatus.ACCEPTED
+        );
     }
 
     public List<Appointment> getTrainerPendingAppointments() {

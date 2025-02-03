@@ -49,9 +49,27 @@ public class User implements UserDetails {
     private Double bodyFat;
     private Double muscleMass;
 
+    @Column(name = "target_sessions")
+    private Integer targetSessions;
+
+    @Column(name = "target_points")
+    private Double targetPoints;
+
     private Boolean emailNotifications = true;
     private Boolean pushNotifications = true;
     private String reminderTime;
+
+    public void setTargetSessions(Integer targetSessions) {
+        if (this.userType == UserType.TRAINER) {
+            this.targetSessions = targetSessions;
+        }
+    }
+
+    public void setTargetPoints(Double targetPoints) {
+        if (this.userType == UserType.TRAINER) {
+            this.targetPoints = targetPoints;
+        }
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

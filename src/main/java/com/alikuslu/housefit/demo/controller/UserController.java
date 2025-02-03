@@ -5,20 +5,24 @@ import com.alikuslu.housefit.demo.dto.UpdateMeasurementDto;
 import com.alikuslu.housefit.demo.dto.UpdateProfileDto;
 import com.alikuslu.housefit.demo.model.User;
 import com.alikuslu.housefit.demo.model.UserType;
+import com.alikuslu.housefit.demo.service.AdminService;
 import com.alikuslu.housefit.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
+    private final AdminService adminService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AdminService adminService) {
         this.userService = userService;
+        this.adminService = adminService;
     }
     
     @GetMapping("/search")
@@ -26,6 +30,11 @@ public class UserController {
             @RequestParam String query,
             @RequestParam(defaultValue = "CUSTOMER") UserType type) {
         return ResponseEntity.ok(userService.searchUsers(query, type));
+    }
+
+    @GetMapping("/my-progress")
+    public ResponseEntity<Map<String, Object>> getMyProgress(@RequestAttribute User currentUser) {
+        return ResponseEntity.ok(adminService.getTrainerMonthlyProgress(currentUser.getId()));
     }
 
     @GetMapping("/trainers")

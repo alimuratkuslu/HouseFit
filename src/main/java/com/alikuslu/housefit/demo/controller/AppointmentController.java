@@ -34,6 +34,12 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/today")
+    public ResponseEntity<List<Appointment>> getTodaysSessions() {
+        List<Appointment> appointments = appointmentService.getTodaysSessions();
+        return ResponseEntity.ok(appointments);
+    }
+
     @GetMapping("/trainer-appointments/pending")
     public ResponseEntity<List<Appointment>> getTrainerAppointmentsPending() {
         List<Appointment> appointments = appointmentService.getTrainerPendingAppointments();
