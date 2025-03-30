@@ -42,6 +42,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllTrainers());
     }
 
+    @GetMapping("/customers")
+    public ResponseEntity<List<User>> getAllCustomers() {
+        return ResponseEntity.ok(userService.getAllCustomers());
+    }
+
     @PutMapping("/{id}/profile")
     public ResponseEntity<User> updateProfile(@PathVariable Long id, @RequestBody UpdateProfileDto profileDto) {
         User updatedUser = userService.updateProfile(id, profileDto);

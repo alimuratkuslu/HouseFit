@@ -1,0 +1,31 @@
+{
+  "index_patterns": ["housefit-logs-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.lifecycle.name": "housefit-logs-policy",
+    "index.lifecycle.rollover_alias": "housefit-logs"
+  },
+  "mappings": {
+    "properties": {
+      "@timestamp": { "type": "date" },
+      "level": { "type": "keyword" },
+      "message": { "type": "text" },
+      "logger_name": { "type": "keyword" },
+      "correlationId": { "type": "keyword" },
+      "uri": { "type": "keyword" },
+      "method": { "type": "keyword" },
+      "status": { "type": "keyword" },
+      "duration": { "type": "long" },
+      "clientIp": { "type": "ip" },
+      "userAgent": { "type": "text" },
+      "geoip": {
+        "properties": {
+          "country_name": { "type": "keyword" },
+          "city_name": { "type": "keyword" },
+          "location": { "type": "geo_point" }
+        }
+      }
+    }
+  }
+}

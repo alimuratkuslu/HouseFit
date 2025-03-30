@@ -70,6 +70,11 @@ public class PointsLogService {
         return pointsLogRepository.findByTrainerId(trainer.getId());
     }
 
+    public List<PointsLog> getTrainerLogsForAdmin(Long trainerId) {
+        User trainer = userService.findById(trainerId);
+        return pointsLogRepository.findByTrainerId(trainer.getId());
+    }
+
     private String getLoggedInUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {

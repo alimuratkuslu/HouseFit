@@ -40,6 +40,21 @@ public class AppointmentController {
         return ResponseEntity.ok(appointments);
     }
 
+    @GetMapping("/next-session")
+    public ResponseEntity<?> getNextUpcomingSession() {
+        Appointment nextSession = appointmentService.getNextUpcomingSession();
+        if (nextSession == null) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.ok(nextSession);
+    }
+
+    @PutMapping("/{appointmentId}/complete")
+    public ResponseEntity<Appointment> completeAppointment(@PathVariable Long appointmentId) {
+        Appointment updatedAppointment = appointmentService.completeAppointment(appointmentId);
+        return ResponseEntity.ok(updatedAppointment);
+    }
+
     @GetMapping("/trainer-appointments/pending")
     public ResponseEntity<List<Appointment>> getTrainerAppointmentsPending() {
         List<Appointment> appointments = appointmentService.getTrainerPendingAppointments();

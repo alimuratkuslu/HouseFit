@@ -6,6 +6,9 @@ import com.alikuslu.housefit.demo.dto.UpdateProfileDto;
 import com.alikuslu.housefit.demo.model.User;
 import com.alikuslu.housefit.demo.model.UserType;
 import com.alikuslu.housefit.demo.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,41 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerReportService reportService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, CustomerReportService reportService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.reportService = reportService;
+    }
+
+    public boolean canAccessReport(Long reportId, UserDetails userDetails) {
+
+        User user = findByUsername(userDetails.getUsername());
+
+        if (user.getUserType().equals(UserType.TRAINER)) {
+            Long trainerId = user.getId();
+            return reportService.isReportUploadedByTrainer(reportId, trainerId);
+        }
+
+        if (user.getUserType().equals(UserType.CUSTOMER)) {
+            Long customerId = user.getId();
+            return reportService.isReportOwnedByCustomer(reportId, customerId);
+        }
+
+        return false;
+    }
+
+    public boolean canDeleteReport(Long reportId, UserDetails userDetails) {
+
+        User user = findByUsername(userDetails.getUsername());
+
+        if (user.getUserType().equals(UserType.TRAINER)) {
+            Long trainerId = user.getId();
+            return reportService.isReportUploadedByTrainer(reportId, trainerId);
+        }
+
+        return false;
     }
 
     public List<User> searchUsers(String query, UserType type) {
@@ -30,6 +64,10 @@ public class UserService {
 
     public List<User> getAllTrainers() {
         return userRepository.findByUserType(UserType.TRAINER);
+    }
+
+    public List<User> getAllCustomers() {
+        return userRepository.findByUserType(UserType.CUSTOMER);
     }
 
     public User updateProfile(Long id, UpdateProfileDto profileDto) {
@@ -90,6 +128,10 @@ public class UserService {
 
     public void saveUser(User user) {
         userRepository.save(user);
+    }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     public User updateUsername(Long userId, String newUsername) {

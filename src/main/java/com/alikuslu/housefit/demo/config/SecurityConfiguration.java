@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         /*
                        .antMatchers("/api/admin/**").hasRole("ADMIN")
                        .antMatchers("/api/trainer/**").hasRole("TRAINER")

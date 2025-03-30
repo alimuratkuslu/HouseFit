@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,9 +17,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final String CORRELATION_ID_HEADER = "X-Correlation-ID";
+    private static final String CORRELATION_ID_LOG_VAR = "correlationId";
 
     private final HandlerExceptionResolver handlerExceptionResolver;
 
@@ -40,12 +45,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        String correlationId = UUID.randomUUID().toString();
+        MDC.put(CORRELATION_ID_LOG_VAR, correlationId);
+        response.addHeader(CORRELATION_ID_HEADER, correlationId);
 
         try {
             final String jwt = authHeader.substring(7);
@@ -71,6 +81,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
             handlerExceptionResolver.resolveException(request, response, null, exception);
+        } finally {
+            MDC.remove(CORRELATION_ID_LOG_VAR);
         }
 
     }

@@ -4,6 +4,7 @@ import com.alikuslu.housefit.demo.dto.RequestAppointmentDto;
 import com.alikuslu.housefit.demo.model.*;
 import com.alikuslu.housefit.demo.repository.AppointmentRepository;
 import com.alikuslu.housefit.demo.repository.AvailabilityRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,13 @@ public class AppointmentService {
     public Appointment declineAppointment(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        Availability availability = appointment.getAvailability();
+        if (availability != null) {
+            availability.setIsBooked(false);
+            availabilityRepository.save(availability);
+        }
+
         appointment.setStatus(AppointmentStatus.DECLINED);
         return appointmentRepository.save(appointment);
     }
@@ -50,18 +58,48 @@ public class AppointmentService {
     }
 
     public List<Appointment> getTodaysSessions() {
-        String trainerUsername = getLoggedInUsername();
-        User user = userService.findByUsername(trainerUsername);
+        String username = getLoggedInUsername();
+        User user = userService.findByUsername(username);
 
         LocalDateTime startOfDay = LocalDateTime.now().with(LocalTime.MIN);
         LocalDateTime endOfDay = LocalDateTime.now().with(LocalTime.MAX);
 
-        return appointmentRepository.findByTrainerAndAppointmentTimeBetweenAndStatus(
+        return appointmentRepository.findTodaysAcceptedSessionsOrderByTime(
                 user,
                 startOfDay,
                 endOfDay,
                 AppointmentStatus.ACCEPTED
         );
+    }
+
+    public Appointment getNextUpcomingSession() {
+        String username = getLoggedInUsername();
+        User user = userService.findByUsername(username);
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endOfDay = LocalDateTime.now().with(LocalTime.MAX);
+
+        return appointmentRepository.findNextUpcomingSession(
+                user,
+                now,
+                endOfDay,
+                AppointmentStatus.ACCEPTED
+        );
+    }
+
+    public Appointment completeAppointment(Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        String username = getLoggedInUsername();
+        User user = userService.findByUsername(username);
+
+        if (appointment.getStatus() != AppointmentStatus.ACCEPTED) {
+            throw new RuntimeException("Only accepted appointments can be marked as completed");
+        }
+
+        appointment.setStatus(AppointmentStatus.COMPLETED);
+        return appointmentRepository.save(appointment);
     }
 
     public List<Appointment> getTrainerPendingAppointments() {

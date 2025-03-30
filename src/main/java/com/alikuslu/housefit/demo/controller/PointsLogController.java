@@ -29,4 +29,10 @@ public class PointsLogController {
         List<PointsLog> logs = pointsLogService.getTrainerLogs();
         return ResponseEntity.ok(logs);
     }
+
+    @GetMapping("/admin/trainer/{trainerId}/logs")
+    public ResponseEntity<List<PointsLog>> getTrainerLogs(@PathVariable Long trainerId) {
+        List<PointsLog> logs = pointsLogService.getTrainerLogsForAdmin(trainerId);
+        return ResponseEntity.ok(logs);
+    }
 }

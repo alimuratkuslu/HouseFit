@@ -24,14 +24,27 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             AppointmentStatus status
     );
 
-    List<Appointment> findByCustomerAndAppointmentTimeBetween(User customer, LocalDateTime start, LocalDateTime end);
-    List<Appointment> findByTrainerAndAppointmentTimeBetween(User trainer, LocalDateTime start, LocalDateTime end);
-
     @Query("SELECT a FROM Appointment a WHERE " +
             "(a.trainer = :user OR a.customer = :user) AND " +
-            "a.appointmentTime BETWEEN :start AND :end " +
+            "a.appointmentTime BETWEEN :startTime AND :endTime AND " +
+            "a.status = :status " +
             "ORDER BY a.appointmentTime ASC")
-    List<Appointment> findTodaysAppointmentsForUser(@Param("user") User user,
-                                                    @Param("start") LocalDateTime start,
-                                                    @Param("end") LocalDateTime end);
+    List<Appointment> findTodaysAcceptedSessionsOrderByTime(
+            @Param("user") User user,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("status") AppointmentStatus status
+    );
+
+    @Query(value = "SELECT * FROM appointments a " +
+            "WHERE (a.trainer_id = :#{#user.id} OR a.customer_id = :#{#user.id}) " +
+            "AND a.appointment_time BETWEEN :currentTime AND :endTime " +
+            "AND a.status = :#{#status.name()} " +
+            "ORDER BY a.appointment_time ASC LIMIT 1", nativeQuery = true)
+    Appointment findNextUpcomingSession(
+            @Param("user") User user,
+            @Param("currentTime") LocalDateTime currentTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("status") AppointmentStatus status
+    );
 }
