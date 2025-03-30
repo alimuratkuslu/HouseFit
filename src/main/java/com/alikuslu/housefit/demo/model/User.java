@@ -56,7 +56,7 @@ public class User implements UserDetails {
     @Column(name = "target_points")
     private Double targetPoints;
 
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Certificate> certificates = new ArrayList<>();
 
     private Boolean emailNotifications = true;
