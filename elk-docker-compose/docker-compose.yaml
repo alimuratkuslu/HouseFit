@@ -23,7 +23,6 @@ services:
     volumes:
       - ./logstash/config/logstash.yaml:/usr/share/logstash/config/logstash.yml
       - ./logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./logs/housefit-logs.log:/usr/share/logstash/data/sample.log
       - ./logs:/usr/share/logstash/logs
     networks:
       - elk
